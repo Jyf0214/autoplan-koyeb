@@ -9,8 +9,8 @@ ADD https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3
 
 # 4. Copy required local files from your project
 COPY docker-run/times.ttf /usr/share/fonts/
-COPY docker-run/yml/ /tmp/yml/
-
+COPY docker-run/ /tmp/yml/
+COPY docker-run/ /tmp/
 # 5. Add the application JAR
 ADD https://github.com/wyt1215819315/autoplan/releases/download/v3.0.9-dev/auto_plan.jar /app/auto_plan.jar
 
