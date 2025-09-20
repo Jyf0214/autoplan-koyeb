@@ -11,8 +11,7 @@ RUN apk update && apk --no-cache add fontconfig ttf-dejavu
 COPY ./docker-run/times.ttf /usr/share/fonts/
 
 VOLUME /tmp
-RUN apk add --no-cache wget && \
-    wget -O /auto_plan.jar https://github.com/wyt1215819315/autoplan/releases/download/v3.0.9-dev/auto_plan.jar
+ADD https://github.com/wyt1215819315/autoplan/releases/download/v3.0.9-dev/auto_plan.jar /auto_plan.jar
 EXPOSE 26666
 
 ENTRYPOINT ["java","-jar","auto_plan.jar","--spring.config.location=/tmp/yml/application.yml"]
