@@ -1,32 +1,23 @@
 # ===================================================================
-# application.yml (Optimized for Environment Variables)
-# Default Configuration: Runs with a minimal, file-based SQLite database.
-# All critical settings can be overridden by environment variables.
+# FINAL - LOCAL DATABASE CONFIGURATION
+# This file is configured to use a self-contained SQLite database.
 # ===================================================================
-
 server:
-  # The server port. Can be overridden by the PORT or SERVER_PORT environment variable.
-  port: ${SERVER_PORT:26666}
+  port: 26666
 
 spring:
-  # Default datasource configuration (SQLite).
-  # These can all be overridden for MySQL, PostgreSQL, etc.
   datasource:
-    # Driver for the database.
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.sqlite.JDBC}
-    # Connection URL. For SQLite, this is the path to the database file.
-    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:autoplan.db}
-    # Username for the database (SQLite doesn't need one).
-    username: ${SPRING_DATASOURCE_USERNAME:}
-    # Password for the database (SQLite doesn't need one).
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    # Use the SQLite database driver
+    driver-class-name: org.sqlite.JDBC
+    # Create a database file named 'autoplan.db' inside the container
+    url: jdbc:sqlite:autoplan.db
+    username: 
+    password: 
 
-  # These settings are generally static and tied to the application's code.
   main:
     allow-bean-definition-overriding: true
   mvc:
     static-path-pattern: /static/**
-    throw-exception-if-no-handler-found: true
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -34,13 +25,13 @@ spring:
 
 actable:
   table:
-    auto: update
+    # 'create' mode will build the database structure on the first run
+    auto: create
   model:
     pack: com.oldwu.entity;com.oldwu.domain;com.netmusic.model;com.miyoushe.model;com.bili.model
-  # The database type. It's critical this matches the datasource driver.
-  # Options can be 'sqlite', 'mysql', etc.
   database:
-    type: ${ACTABLE_DATABASE_TYPE:sqlite}
+    # Critical: Set database type to sqlite
+    type: sqlite
   index:
     prefix: INDEX_
   unique:
@@ -55,12 +46,3 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-# Push proxy settings. All can be configured via environment variables.
-proxy:
-  push:
-    enable: ${PROXY_PUSH_ENABLE:false} # Default: disabled
-    port: ${PROXY_PUSH_PORT:7890}
-    ip: ${PROXY_PUSH_IP:127.0.0.1}
-    type: ${PROXY_PUSH_TYPE:http/socket}
-    use: ${PROXY_PUSH_USE:} # Default: empty, meaning no services use it
