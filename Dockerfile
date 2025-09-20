@@ -12,7 +12,7 @@ COPY docker-run/times.ttf /usr/share/fonts/
 COPY docker-run/ /tmp/yml/
 COPY docker-run/ /tmp/
 # 5. Add the application JAR
-ADD https://github.com/wyt1215819315/autoplan/releases/download/v3.0.9-dev/auto_plan.jar /app/auto_plan.jar
+ADD https://github.com/wyt1215819315/autoplan/releases/download/v2.11/auto_plan.jar /app/auto_plan.jar
 
 # 6. Expose the port
 EXPOSE 26666
