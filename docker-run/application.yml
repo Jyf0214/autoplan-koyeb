@@ -1,61 +1,66 @@
+# ===================================================================
+# application.yml (Optimized for Environment Variables)
+# Default Configuration: Runs with a minimal, file-based SQLite database.
+# All critical settings can be overridden by environment variables.
+# ===================================================================
+
 server:
-  #服务器端口
-  port: 26666
+  # The server port. Can be overridden by the PORT or SERVER_PORT environment variable.
+  port: ${SERVER_PORT:26666}
+
 spring:
-  #数据库连接配置
+  # Default datasource configuration (SQLite).
+  # These can all be overridden for MySQL, PostgreSQL, etc.
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/autoplan?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&allowPublicKeyRetrieval=true
-    username: root
-    # 在下面填上你的数据库密码(注意空格)
-    password: 密码
+    # Driver for the database.
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.sqlite.JDBC}
+    # Connection URL. For SQLite, this is the path to the database file.
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:autoplan.db}
+    # Username for the database (SQLite doesn't need one).
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    # Password for the database (SQLite doesn't need one).
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+  # These settings are generally static and tied to the application's code.
   main:
     allow-bean-definition-overriding: true
-  mvc: #静态资源
+  mvc:
     static-path-pattern: /static/**
     throw-exception-if-no-handler-found: true
-    hiddenmethod:
-      filter:
-        enabled: true
   thymeleaf:
-    prefix: classpath:/templates/   #在构建URL时预先查看名称的前缀
-    suffix: .html  #构建URL时附加到查看名称的后缀
+    prefix: classpath:/templates/
+    suffix: .html
     cache: false
+
 actable:
   table:
     auto: update
   model:
-    #分号或者逗号隔开
     pack: com.oldwu.entity;com.oldwu.domain;com.netmusic.model;com.miyoushe.model;com.bili.model
+  # The database type. It's critical this matches the datasource driver.
+  # Options can be 'sqlite', 'mysql', etc.
   database:
-    type: mysql
+    type: ${ACTABLE_DATABASE_TYPE:sqlite}
   index:
-    #自己定义的索引前缀#该配置项不设置默认使用actable_idx_
     prefix: INDEX_
   unique:
-    #自己定义的唯一约束前缀#该配置项不设置默认使用actable_uni_
     prefix: INDEX_UNIQUE_
-  # mybatis自有的配置信息，key也可能是：mybatis.mapperLocations
+
 mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-  #mapper配置文件
   mapper-locations: classpath:mapper/*.xml,classpath:mapper/**/*.xml,classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
   type-aliases-package: com.oldwu.entity
-  #开启驼峰命名
   configuration:
     map-underscore-to-camel-case: true
-    #输出mybatis日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#推送代理
+
+# Push proxy settings. All can be configured via environment variables.
 proxy:
   push:
-    enable: false
-    port: 7890
-    ip: 127.0.0.1
-    type: http/socket
-    #指定那种推送方式需要使用代理
-    use:
-      - TelegramPush
-      - DiscordPush
+    enable: ${PROXY_PUSH_ENABLE:false} # Default: disabled
+    port: ${PROXY_PUSH_PORT:7890}
+    ip: ${PROXY_PUSH_IP:127.0.0.1}
+    type: ${PROXY_PUSH_TYPE:http/socket}
+    use: ${PROXY_PUSH_USE:} # Default: empty, meaning no services use it
